@@ -51,7 +51,7 @@ CREATE TABLE public.appointments (
     appointment_id integer NOT NULL,
     customer_id integer NOT NULL,
     service_id integer NOT NULL,
-    "time" time without time zone NOT NULL
+    "time" timestamp with time zone NOT NULL
 );
 
 
@@ -149,6 +149,17 @@ ALTER SEQUENCE public.services_service_id_seq OWNED BY public.services.service_i
 
 
 --
+-- Name: test; Type: TABLE; Schema: public; Owner: freecodecamp
+--
+
+CREATE TABLE public.test (
+    "time" time without time zone
+);
+
+
+ALTER TABLE public.test OWNER TO freecodecamp;
+
+--
 -- Name: appointments appointment_id; Type: DEFAULT; Schema: public; Owner: freecodecamp
 --
 
@@ -185,6 +196,17 @@ ALTER TABLE ONLY public.services ALTER COLUMN service_id SET DEFAULT nextval('pu
 -- Data for Name: services; Type: TABLE DATA; Schema: public; Owner: freecodecamp
 --
 
+INSERT INTO public.services VALUES (1, 'cut');
+INSERT INTO public.services VALUES (2, 'wash & cut');
+INSERT INTO public.services VALUES (3, 'cut tips');
+INSERT INTO public.services VALUES (4, 'dye');
+
+
+--
+-- Data for Name: test; Type: TABLE DATA; Schema: public; Owner: freecodecamp
+--
+
+INSERT INTO public.test VALUES ('11:10:00');
 
 
 --
@@ -205,7 +227,7 @@ SELECT pg_catalog.setval('public.customers_customer_id_seq', 1, false);
 -- Name: services_service_id_seq; Type: SEQUENCE SET; Schema: public; Owner: freecodecamp
 --
 
-SELECT pg_catalog.setval('public.services_service_id_seq', 1, false);
+SELECT pg_catalog.setval('public.services_service_id_seq', 4, true);
 
 
 --
