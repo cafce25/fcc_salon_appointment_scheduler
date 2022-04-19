@@ -1,11 +1,12 @@
 #!/bin/bash
 PSQL="psql -X --username=freecodecamp --dbname=salon --tuples-only -c"
 
-SERVICE_SELECT() {
+echo -e "\n~~~~~ MY SALON ~~~~~\n"
+echo -e "Welcome to my Salon, how can I help you?\n"
+MAIN_MENU() {
   if [[ $1 ]]; then
     echo -e "\n$1"
   fi
-  #echo -e "\nWelcome to our salon! These are the services we offer:"
   # get services
   AVAILABLE_SERVICES=$($PSQL "SELECT service_id, name FROM services")
   echo "$AVAILABLE_SERVICES" | while read SERVICE_ID BAR SERVICE_NAME; do
@@ -18,7 +19,7 @@ SERVICE_SELECT() {
     MAIN_MENU "Please enter the number of a service."
     return
   fi
-  SERVICE_NAME=$($PSQL "SELECT name FROM services WHERE service_id = $SERVICE_ID_SELECTED")
+  SERVICE_NAME=$($PSQL "SELECT name FROM services WHERE service_id = $SERVICE_ID_SELECTED" | sed -r 's/^\s+|\s+$//g')
   # if not a service
   if [[ -z $SERVICE_NAME ]]; then
     MAIN_MENU "The number '$SERVICE_ID_SELECTED' is not a service we offer please select one from the list!"
@@ -26,6 +27,19 @@ SERVICE_SELECT() {
   fi
   echo -e "\nWhat is your phone number?"
   read CUSTOMER_PHONE
-  C
+  CUSTOMER_ID=$($PSQL "SELECT customer_id FROM customers WHERE phone = '$CUSTOMER_PHONE'" | sed -r 's/^\s+|\s+$//g')
+  if [[ -z $CUSTOMER_ID ]]; then
+    # create customer
+    echo I don't have a record for that phone number, what's your name?
+    read CUSTOMER_NAME
+    INSERT_CUSTOMER_RESULT=$($PSQL "INSERT INTO customers(phone, name) VALUES('$CUSTOMER_PHONE', '$CUSTOMER_NAME')")
+    CUSTOMER_ID=$($PSQL "SELECT customer_id FROM customers WHERE phone = '$CUSTOMER_PHONE'" | sed -r 's/^\s+|\s+$//g')
+  else
+    CUSTOMER_NAME="$($PSQL "SELECT name FROM customers WHERE customer_id = $CUSTOMER_ID" | sed -r 's/^\s+|\s+$//g')"
+  fi
+  echo "What time would you like your $SERVICE_NAME, $CUSTOMER_NAME?"
+  read SERVICE_TIME
+  INSERT_APPOINTMENT_RESULT="$($PSQL "INSERT INTO appointments(customer_id, service_id, time) VALUES($CUSTOMER_ID, $SERVICE_ID_SELECTED, '$SERVICE_TIME')")"
+  echo "I have put you down for a $SERVICE_NAME at $SERVICE_TIME, $CUSTOMER_NAME."
 }
-SERVICE_SELECT
+MAIN_MENU

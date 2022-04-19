@@ -51,7 +51,7 @@ CREATE TABLE public.appointments (
     appointment_id integer NOT NULL,
     customer_id integer NOT NULL,
     service_id integer NOT NULL,
-    "time" timestamp with time zone NOT NULL
+    "time" character varying(5) NOT NULL
 );
 
 
@@ -147,18 +147,6 @@ ALTER TABLE public.services_service_id_seq OWNER TO freecodecamp;
 
 ALTER SEQUENCE public.services_service_id_seq OWNED BY public.services.service_id;
 
-
---
--- Name: test; Type: TABLE; Schema: public; Owner: freecodecamp
---
-
-CREATE TABLE public.test (
-    "time" time without time zone
-);
-
-
-ALTER TABLE public.test OWNER TO freecodecamp;
-
 --
 -- Name: appointments appointment_id; Type: DEFAULT; Schema: public; Owner: freecodecamp
 --
@@ -197,16 +185,10 @@ ALTER TABLE ONLY public.services ALTER COLUMN service_id SET DEFAULT nextval('pu
 --
 
 INSERT INTO public.services VALUES (1, 'cut');
-INSERT INTO public.services VALUES (2, 'wash & cut');
-INSERT INTO public.services VALUES (3, 'cut tips');
-INSERT INTO public.services VALUES (4, 'dye');
-
-
---
--- Data for Name: test; Type: TABLE DATA; Schema: public; Owner: freecodecamp
---
-
-INSERT INTO public.test VALUES ('11:10:00');
+INSERT INTO public.services VALUES (2, 'color');
+INSERT INTO public.services VALUES (3, 'perm');
+INSERT INTO public.services VALUES (4, 'style');
+INSERT INTO public.services VALUES (5, 'trim');
 
 
 --
